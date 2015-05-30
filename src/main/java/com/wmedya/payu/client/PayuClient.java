@@ -83,7 +83,7 @@ public class PayuClient implements Serializable {
 		String url = platformUrls.get(config.getPlatform());
 
 		HttpPost post = new HttpPost(url);
-		post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		post.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
 		Map<String, String> params = getParams();
 
