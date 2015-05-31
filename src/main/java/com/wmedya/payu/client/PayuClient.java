@@ -83,7 +83,7 @@ public class PayuClient implements Serializable {
 		String url = platformUrls.get(config.getPlatform());
 
 		HttpPost post = new HttpPost(url);
-		post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		post.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
 		Map<String, String> params = getParams();
 
@@ -102,6 +102,7 @@ public class PayuClient implements Serializable {
 			logger.debug("Response as string:");
 			logger.debug(result);
 			payuResponse = xmlMapper.readValue(result, PayuResponse.class);
+			payuResponse.setRaw(result);
 
 		} catch (Exception e) {
 			logger.error(e);
@@ -221,7 +222,7 @@ public class PayuClient implements Serializable {
 	public boolean checkResponseHash(PayuResponse payuResponse) {
 		LinkedHashMap checkMap = objectMapper.convertValue(payuResponse, LinkedHashMap.class);
 		String hash = (String) checkMap.get("HASH");
-		if (hash != null) {
+		if (hash != null && hash.trim().length() > 0) {
 			checkMap.remove("URL_3DS");
 			checkMap.remove("HASH");
 			logger.debug("Response Hash Check:");
@@ -244,10 +245,20 @@ public class PayuClient implements Serializable {
 		Object cast;
 		try {
 			cast = (Number) value;
+			if (cast instanceof Double) {
+				return formatDouble((double) cast);
+			}
 		} catch (Exception e) {
 			cast = (String) value;
 		}
 		return cast.toString();
+	}
+
+	private String formatDouble(double d) {
+		if (d == (long) d)
+			return String.format("%d", (long) d);
+		else
+			return String.format("%s", d);
 	}
 
 	private String hmacMD5(String msg, String secretKey) {

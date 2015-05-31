@@ -72,6 +72,9 @@ public class PayuResponse implements Serializable {
 	@JsonProperty("WIRE_ACCOUNTS")
 	private List<WireBankAccount> wireAccounts = new ArrayList<WireBankAccount>();
 
+	@JsonIgnore
+	private String raw;
+
 	public PayuResponse() {
 	}
 
@@ -222,6 +225,14 @@ public class PayuResponse implements Serializable {
 	@JsonIgnore
 	public boolean is3DSecure() {
 		return url3ds != null;
+	}
+
+	public String getRaw() {
+		return raw;
+	}
+
+	public void setRaw(String raw) {
+		this.raw = raw;
 	}
 
 }
