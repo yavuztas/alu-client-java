@@ -31,6 +31,7 @@ import com.wmedya.payu.client.model.MerchantPlatform;
 import com.wmedya.payu.client.model.Order;
 import com.wmedya.payu.client.model.Product;
 import com.wmedya.payu.client.model.User;
+import com.wmedya.payu.client.util.StringUtils;
 
 public class PayuClient implements Serializable {
 
@@ -199,7 +200,9 @@ public class PayuClient implements Serializable {
 		for (String key : params.keySet()) {
 			Object value = params.get(key);
 			if (value != null && value instanceof String) {
-				sb.append(((String) value).length()).append(value);
+				String valueString = (String) value;
+				valueString = StringUtils.sanitizeString(valueString);
+				sb.append((valueString).length()).append(valueString);
 			}
 		}
 
@@ -251,7 +254,7 @@ public class PayuClient implements Serializable {
 		} catch (Exception e) {
 			cast = (String) value;
 		}
-		return cast.toString();
+		return StringUtils.sanitizeString(cast.toString());
 	}
 
 	private String formatDouble(double d) {
