@@ -1,7 +1,8 @@
 package com.wmedya.payu.client;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,8 +19,13 @@ public class IpnResponseBuilder implements Serializable {
 	}
 
 	public IpnResponse getResponse(HttpServletRequest request) {
-		Map params = request.getParameterMap();
-		IpnResponse response = mapper.convertValue(params, IpnResponse.class);
+		HashMap<String, Object> parameterMap = new HashMap<>();
+		Enumeration parameterNames = request.getParameterNames();
+		while (parameterNames.hasMoreElements()) {
+			String name = (String) parameterNames.nextElement();
+			parameterMap.put(name, request.getParameter(name));
+		}
+		IpnResponse response = mapper.convertValue(parameterMap, IpnResponse.class);
 		return response;
 	}
 

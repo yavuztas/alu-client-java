@@ -32,6 +32,9 @@ public class IpnResponse implements Serializable {
 	@JsonProperty("ORDERSTATUS")
 	private IpnOrderStatus orderStatus;
 
+	@JsonProperty("IPN_CC_TOKEN")
+	private String token;
+
 	public IpnResponse() {
 	}
 
@@ -100,4 +103,13 @@ public class IpnResponse implements Serializable {
 		}
 		return false;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 }
