@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -31,6 +28,7 @@ import com.wmedya.payu.client.model.MerchantPlatform;
 import com.wmedya.payu.client.model.Order;
 import com.wmedya.payu.client.model.Product;
 import com.wmedya.payu.client.model.User;
+import com.wmedya.payu.client.util.HashUtils;
 import com.wmedya.payu.client.util.StringUtils;
 
 public class PayuClient implements Serializable {
@@ -187,33 +185,12 @@ public class PayuClient implements Serializable {
 
 		Map<String, String> copyParams = new LinkedHashMap<>();
 		copyParams.putAll(params);
-		copyParams.put("ORDER_HASH", calculateHash(params));
+		copyParams.put("ORDER_HASH", HashUtils.calculateHash(config.getSecret(), params));
 
 		logger.debug("total parameters...");
 		logger.debug(copyParams);
 
 		return copyParams;
-	}
-
-	private String calculateHash(Map<String, String> params) {
-		StringBuilder sb = new StringBuilder();
-		for (String key : params.keySet()) {
-			Object value = params.get(key);
-			if (value != null && value instanceof String) {
-				String valueString = (String) value;
-				valueString = StringUtils.sanitizeString(valueString);
-				sb.append((valueString).length()).append(valueString);
-			}
-		}
-
-		String parametersString = sb.toString();
-		logger.debug("joining paramteres...");
-		logger.debug(parametersString);
-
-		String orderHash = hmacMD5(parametersString, config.getSecret());
-		logger.debug("calculating order_hash...");
-		logger.debug(orderHash);
-		return orderHash;
 	}
 
 	/**
@@ -230,7 +207,7 @@ public class PayuClient implements Serializable {
 			checkMap.remove("HASH");
 			logger.debug("Response Hash Check:");
 			logger.debug(checkMap);
-			String calculatedHash = calculateHash(checkMap);
+			String calculatedHash = HashUtils.calculateHash(config.getSecret(), checkMap);
 			return calculatedHash.contentEquals(hash);
 		}
 		return false;
@@ -262,30 +239,6 @@ public class PayuClient implements Serializable {
 			return String.format("%d", (long) d);
 		else
 			return String.format("%s", d);
-	}
-
-	private String hmacMD5(String msg, String secretKey) {
-		String digest = null;
-		try {
-			SecretKeySpec key = new SecretKeySpec((secretKey).getBytes("UTF-8"), "HmacMD5");
-			Mac mac = Mac.getInstance("HmacMD5");
-			mac.init(key);
-
-			byte[] bytes = mac.doFinal(msg.getBytes("ASCII"));
-
-			StringBuffer hash = new StringBuffer();
-			for (int i = 0; i < bytes.length; i++) {
-				String hex = Integer.toHexString(0xFF & bytes[i]);
-				if (hex.length() == 1) {
-					hash.append('0');
-				}
-				hash.append(hex);
-			}
-			digest = hash.toString();
-		} catch (Exception e) {
-			logger.error(e);
-		}
-		return digest;
 	}
 
 	public void setOrder(Order order) {

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wmedya.payu.client.model.IpnOrderStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class IpnResponse implements Serializable {
+public class IpnRequest implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,7 +35,16 @@ public class IpnResponse implements Serializable {
 	@JsonProperty("IPN_CC_TOKEN")
 	private String token;
 
-	public IpnResponse() {
+	@JsonProperty("IPN_PID[]")
+	private String ipnPid;
+
+	@JsonProperty("IPN_PNAME[]")
+	private String ipnPName;
+
+	@JsonProperty("IPN_DATE")
+	private String ipnDate;
+
+	public IpnRequest() {
 	}
 
 	public String getSaleDate() {
@@ -110,6 +119,30 @@ public class IpnResponse implements Serializable {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public String getIpnPid() {
+		return ipnPid;
+	}
+
+	public void setIpnPid(String ipnPid) {
+		this.ipnPid = ipnPid;
+	}
+
+	public String getIpnPName() {
+		return ipnPName;
+	}
+
+	public void setIpnPName(String ipnPName) {
+		this.ipnPName = ipnPName;
+	}
+
+	public String getIpnDate() {
+		return ipnDate;
+	}
+
+	public void setIpnDate(String ipnDate) {
+		this.ipnDate = ipnDate;
 	}
 
 }
