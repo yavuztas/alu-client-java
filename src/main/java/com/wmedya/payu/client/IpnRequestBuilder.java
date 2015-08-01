@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,23 +31,35 @@ public class IpnRequestBuilder implements Serializable {
 	}
 
 	public IpnRequest getIpnRequest(HttpServletRequest request) {
-		return getIpnRequest(request, false);
+		return getIpnRequest(request, false, null);
 	}
 
 	public IpnRequest getIpnRequest(HttpServletRequest request, boolean validate) {
-		Map<String, String> parameterMap = new TreeMap<>();
-		Enumeration parameterNames = request.getParameterNames();
-		while (parameterNames.hasMoreElements()) {
-			String name = (String) parameterNames.nextElement();
-			parameterMap.put(name, request.getParameter(name));
+		return getIpnRequest(request, validate, null);
+	}
+
+	public IpnRequest getIpnRequest(HttpServletRequest request, boolean validate, String[] validateOrder) {
+		Map<String, String> parameters = new LinkedHashMap<>();
+
+		if (validateOrder != null && validateOrder.length > 0) {
+			for (String key : validateOrder) {
+				parameters.put(key, request.getParameter(key));
+			}
+			parameters.put("HASH", request.getParameter("HASH"));
+		} else {
+			Enumeration parameterNames = request.getParameterNames();
+			while (parameterNames.hasMoreElements()) {
+				String name = (String) parameterNames.nextElement();
+				parameters.put(name, request.getParameter(name));
+			}
 		}
 
 		if (validate) {
-			if (!checkRequestHash(parameterMap)) {
+			if (!checkRequestHash(parameters)) {
 				throw new RuntimeException("IPN Request sender could not be validated!");
 			}
 		}
-		return mapper.convertValue(parameterMap, IpnRequest.class);
+		return mapper.convertValue(parameters, IpnRequest.class);
 	}
 
 	public boolean checkRequestHash(Map<String, String> params) {
@@ -57,8 +69,6 @@ public class IpnRequestBuilder implements Serializable {
 			logger.debug("Response Hash Check:");
 			logger.debug(params);
 			String calculatedHash = HashUtils.calculateHash(config.getSecret(), params);
-			System.out.println(hash);
-			System.out.println(calculatedHash);
 			return calculatedHash.contentEquals(hash);
 		}
 		return false;
@@ -76,12 +86,63 @@ public class IpnRequestBuilder implements Serializable {
 		return "<EPAYMENT>" + date + "|" + hash + "</EPAYMENT>";
 	}
 
-	public static void main(String[] args) {
+	private Map<String, String> getDefaultIpnRequestHashParameters() {
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-		String format = dateFormat.format(new Date());
-		System.out.println(format);
+		Map<String, String> params = new LinkedHashMap<>();
+		params.put("SALEDATE", "");
+		params.put("REFNO", "");
+		params.put("REFNOEXT", "");
+		params.put("ORDERNO", "");
+		params.put("ORDERSTATUS", "");
+		params.put("PAYMETHOD", "");
+		params.put("FIRSTNAME", "");
+		params.put("LASTNAME", "");
+		params.put("IDENTITY_NO", "");
+		params.put("IDENTITY_ISSUER", "");
+		params.put("COMPANY", "");
+		params.put("REGISTRATIONNUMBER", "");
+		params.put("FISCALCODE", "");
+		params.put("CBANKNAME", "");
+		params.put("CBANKACCOUNT", "");
+		params.put("ADDRESS1", "");
+		params.put("ADDRESS2", "");
+		params.put("CITY", "");
+		params.put("STATE", "");
+		params.put("ZIPCODE", "");
+		params.put("COUNTRY", "");
+		params.put("PHONE", "");
+		params.put("FAX", "");
+		params.put("CUSTOMEREMAIL", "");
+		params.put("FIRSTNAME_D", "");
+		params.put("LASTNAME_D", "");
+		params.put("COMPANY_D", "");
+		params.put("ADDRESS1_D", "");
+		params.put("ADDRESS2_D", "");
+		params.put("CITY_D", "");
+		params.put("STATE_D", "");
+		params.put("ZIPCODE_D", "");
+		params.put("COUNTRY_D", "");
+		params.put("PHONE_D", "");
+		params.put("IPADDRESS", "");
+		params.put("CURRENCY", "");
+		params.put("IPN_PID[]", "");
+		params.put("IPN_PNAME[]", "");
+		params.put("IPN_PCODE[]", "");
+		params.put("IPN_INFO[]", "");
+		params.put("IPN_QTY[]", "");
+		params.put("IPN_PRICE[]", "");
+		params.put("IPN_VAT[]", "");
+		params.put("IPN_VER[]", "");
+		params.put("IPN_DISCOUNT[]", "");
+		params.put("IPN_PROMONAME[]", "");
+		params.put("IPN_DELIVEREDCODES[]", "");
+		params.put("IPN_TOTAL[]", "");
+		params.put("IPN_TOTALGENERAL", "");
+		params.put("IPN_SHIPPING", "");
+		params.put("IPN_COMMISSION", "");
+		params.put("IPN_DATE", "");
 
+		return params;
 	}
 
 }
