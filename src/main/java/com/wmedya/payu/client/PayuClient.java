@@ -27,6 +27,7 @@ import com.wmedya.payu.client.model.MerchantConfig;
 import com.wmedya.payu.client.model.MerchantPlatform;
 import com.wmedya.payu.client.model.Order;
 import com.wmedya.payu.client.model.Product;
+import com.wmedya.payu.client.model.TokenOrder;
 import com.wmedya.payu.client.model.User;
 import com.wmedya.payu.client.util.HashUtils;
 import com.wmedya.payu.client.util.StringUtils;
@@ -40,6 +41,7 @@ public class PayuClient implements Serializable {
 	private MerchantConfig config;
 
 	private Map<MerchantPlatform, String> platformUrls = new HashMap<MerchantPlatform, String>();
+	private Map<MerchantPlatform, String> tokenUrls = new HashMap<MerchantPlatform, String>();
 
 	private HttpClient client = new DefaultHttpClient();
 
@@ -50,6 +52,8 @@ public class PayuClient implements Serializable {
 	private Card card;
 	private User user;
 
+	private TokenOrder tokenOrder;
+
 	public PayuClient(MerchantConfig config) {
 		this.config = config;
 
@@ -58,6 +62,12 @@ public class PayuClient implements Serializable {
 		platformUrls.put(MerchantPlatform.RO, "https://secure.payu.ro/order/alu/v3");
 		platformUrls.put(MerchantPlatform.RU, "https://secure.payu.ru/order/alu/v3");
 		platformUrls.put(MerchantPlatform.UA, "https://secure.payu.ua/order/alu/v3");
+
+		tokenUrls.put(MerchantPlatform.TR, "https://secure.payu.com.tr/order/tokens/");
+		tokenUrls.put(MerchantPlatform.HU, "https://secure.payu.com.hu/order/tokens/");
+		tokenUrls.put(MerchantPlatform.RO, "https://secure.payu.com.ro/order/tokens/");
+		tokenUrls.put(MerchantPlatform.RU, "https://secure.payu.com.ru/order/tokens/");
+		tokenUrls.put(MerchantPlatform.UA, "https://secure.payu.com.ua/order/tokens/");
 	}
 
 	public PayuResponse pay() {
@@ -108,6 +118,65 @@ public class PayuClient implements Serializable {
 		}
 
 		return payuResponse;
+	}
+
+	public TokenPaymentResponse pay(TokenOrder tokenOrder) {
+
+		this.tokenOrder = tokenOrder;
+
+		String url = tokenUrls.get(config.getPlatform());
+
+		HttpPost post = new HttpPost(url);
+		post.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+
+		Map<String, String> params = getTokenPaymentParams();
+
+		List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+		for (String key : params.keySet()) {
+			postParams.add(new BasicNameValuePair(key, params.get(key)));
+		}
+
+		TokenPaymentResponse payuResponse = null;
+		try {
+			logger.debug("executing http post request...");
+			post.setEntity(new UrlEncodedFormEntity(postParams));
+			HttpResponse response = client.execute(post);
+			logger.debug("Response Code : " + response.getStatusLine().getStatusCode());
+			String result = EntityUtils.toString(response.getEntity(), "UTF-8");
+			logger.debug("Response as string:");
+			logger.debug(result);
+			payuResponse = objectMapper.readValue(result, TokenPaymentResponse.class);
+			payuResponse.setRaw(result);
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+		return payuResponse;
+	}
+
+	public Map<String, String> getTokenPaymentParams() {
+		TreeMap<String, String> params = new TreeMap<String, String>();
+		params.put("MERCHANT", config.getCode());
+
+		if (tokenOrder != null) {
+			LinkedHashMap map = objectMapper.convertValue(tokenOrder, LinkedHashMap.class);
+			for (Object key : map.keySet()) {
+				Object value = map.get(key);
+				if (value != null) {
+					params.put((String) key, convertToString(value));
+				}
+			}
+		}
+
+		Map<String, String> copyParams = new LinkedHashMap<>();
+		copyParams.putAll(params);
+		copyParams.put("SIGN", HashUtils.calculateHash(config.getSecret(), params));
+
+		logger.debug("total parameters...");
+		logger.debug(copyParams);
+
+		return copyParams;
+
 	}
 
 	public Map<String, String> getParams() {

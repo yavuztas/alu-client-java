@@ -1,7 +1,9 @@
 package com.wmedya.payu.client;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wmedya.payu.client.model.IpnOrderStatus;
@@ -32,9 +34,6 @@ public class IpnRequest implements Serializable {
 	@JsonProperty("ORDERSTATUS")
 	private IpnOrderStatus orderStatus;
 
-	@JsonProperty("IPN_CC_TOKEN")
-	private String token;
-
 	@JsonProperty("IPN_PID[]")
 	private String ipnPid;
 
@@ -43,6 +42,16 @@ public class IpnRequest implements Serializable {
 
 	@JsonProperty("IPN_DATE")
 	private String ipnDate;
+
+	@JsonProperty("IPN_CC_TOKEN")
+	private String ipnCardToken;
+
+	@JsonProperty("IPN_CC_MASK")
+	private String ipnCardMask;
+
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC")
+	@JsonProperty("IPN_CC_EXP_DATE")
+	private Date ipnCardExpireDate;
 
 	public IpnRequest() {
 	}
@@ -113,14 +122,6 @@ public class IpnRequest implements Serializable {
 		return false;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
 	public String getIpnPid() {
 		return ipnPid;
 	}
@@ -143,6 +144,30 @@ public class IpnRequest implements Serializable {
 
 	public void setIpnDate(String ipnDate) {
 		this.ipnDate = ipnDate;
+	}
+
+	public String getIpnCardToken() {
+		return ipnCardToken;
+	}
+
+	public void setIpnCardToken(String ipnCardToken) {
+		this.ipnCardToken = ipnCardToken;
+	}
+
+	public String getIpnCardMask() {
+		return ipnCardMask;
+	}
+
+	public void setIpnCardMask(String ipnCardMask) {
+		this.ipnCardMask = ipnCardMask;
+	}
+
+	public Date getIpnCardExpireDate() {
+		return ipnCardExpireDate;
+	}
+
+	public void setIpnCardExpireDate(Date ipnCardExpireDate) {
+		this.ipnCardExpireDate = ipnCardExpireDate;
 	}
 
 }
