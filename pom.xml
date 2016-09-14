@@ -14,31 +14,15 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>synergian-repo</id>
-			<url>https://raw.github.com/synergian/wagon-git/releases</url>
-		</pluginRepository>
-	</pluginRepositories>
 
 	<distributionManagement>
 		<repository>
-			<id>maven-repo</id>
-			<name>maven-repo</name>
-			<url>git:master://root@scm.ondestek.com:/opt/git/maven-repo.git</url>
+			<id>releases</id>
+			<url>https://scm.ondestek.com/content/repositories/releases</url>
 		</repository>
 	</distributionManagement>
 
 	<build>
-
-		<extensions>
-			<extension>
-				<groupId>ar.com.synergian</groupId>
-				<artifactId>wagon-git</artifactId>
-				<version>0.2.5</version>
-			</extension>
-		</extensions>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
