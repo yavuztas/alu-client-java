@@ -1,5 +1,9 @@
 package com.wmedya.payu.client.test;
 
+import org.apache.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.wmedya.payu.client.PayuClient;
 import com.wmedya.payu.client.PayuResponse;
 import com.wmedya.payu.client.model.Address;
@@ -15,9 +19,17 @@ import com.wmedya.payu.client.model.User;
 
 public class BasicPaymentTest {
 
-	public static void main(String[] args) {
+	private Logger logger = Logger.getLogger(BasicPaymentTest.class);
 
-		MerchantConfig config = new MerchantConfig("YOUR_CODE", "YOUR_SECRET", MerchantPlatform.TR);
+	private MerchantConfig config;
+
+	@Before
+	public void setUp() {
+		config = new MerchantConfig("YOUR_CODE", "YOUR_SECRET", MerchantPlatform.TR);
+	}
+
+	@Test
+	public void basicPaymentTest() {
 
 		Order order = new Order("123");
 		order.setBackRef("http://your.path.to/return");
@@ -66,13 +78,13 @@ public class BasicPaymentTest {
 
 		// can check response hash if needed
 		if (!client.checkResponseHash(response)) {
-			System.out.println("Response coming from Payu is not valid !, http response might be changed on the fly :)");
+			logger.info("Response coming from Payu is not valid !, http response might be changed on the fly :)");
 		}
 
-		System.out.println("Response status: " + response.getStatus());
-		System.out.println("Response code: " + response.getReturnCode());
-		System.out.println("Response message: " + response.getReturnMessage());
-		System.out.println("Is 3D Secure ?: " + response.is3DSecure());
+		logger.info("Response status: " + response.getStatus());
+		logger.info("Response code: " + response.getReturnCode());
+		logger.info("Response message: " + response.getReturnMessage());
+		logger.info("Is 3D Secure ?: " + response.is3DSecure());
 
 	}
 
