@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wmedya.payu</groupId>
 	<artifactId>alu-client-java</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>alu-client-java</name>
 	<description>Payu alu client for java</description>
 
