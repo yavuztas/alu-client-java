@@ -2,8 +2,7 @@
 Payu Automatic Live Update (ALU) Client for Java
 
 Basic Payment Sample
-
-
+```java
 		MerchantConfig config = new MerchantConfig("YOUR_CODE", "YOUR_SECRET", MerchantPlatform.TR);
 		
 		Order order = new Order("123");
@@ -60,5 +59,5 @@ Basic Payment Sample
 		System.out.println("Response code: " + response.getReturnCode());
 		System.out.println("Response message: " + response.getReturnMessage());
 		System.out.println("Is 3D Secure ?: " + response.is3DSecure());
-
+```
 See also wiki for token payment and receiving ipn requests samples
