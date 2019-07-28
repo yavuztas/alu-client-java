@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * User user = new User(&quot;127.0.0.1&quot;, &quot;2015-05-27 07:13;54&quot;);
  * </pre>
  * 
- * @author Yusuf Ziya Tekin
+ * @author Yavuz Tas
  * 
  */
 public class User implements Serializable {
@@ -35,8 +35,7 @@ public class User implements Serializable {
 	/**
 	 * Creates a user represents the shopper with details
 	 * 
-	 * @param clientIp
-	 *            IP address of the Shopper
+	 * @param clientIp IP address of the Shopper
 	 */
 	public User(String clientIp) {
 		this(clientIp, null);
@@ -45,11 +44,9 @@ public class User implements Serializable {
 	/**
 	 * Creates a user represents the shopper with details
 	 * 
-	 * @param clientIp
-	 *            IP address of the Shopper
-	 * @param clientTime
-	 *            Time collected from the Shopper's browser in YYYY-MM-DD
-	 *            hh:mm:ss format
+	 * @param clientIp   IP address of the Shopper
+	 * @param clientTime Time collected from the Shopper's browser in YYYY-MM-DD
+	 *                   hh:mm:ss format
 	 */
 	public User(String clientIp, String clientTime) {
 		this.clientIp = clientIp;

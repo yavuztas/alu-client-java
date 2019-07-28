@@ -15,8 +15,8 @@ Product product2 = new Product("Product 2", "PRD2", 12.0, PricesCurrency.TRY);
 order.addProduct(product1);
 order.addProduct(product2);
 
-Billing billing = new Billing("TEKİN", "Yusuf Ziya", "TR");
-billing.setEmail("yusufziyatekin@gmail.com");
+Billing billing = new Billing("TAS", "Yavuz", "TR");
+billing.setEmail("email@mymail.com");
 // billing.setPhone("123123123");
 
 Address address = new Address("Somewhere in Turkey line 1", "Somewhere in Turkey line 2", "06100", "ANKARA", "ANKARA");
@@ -25,9 +25,9 @@ billing.setAddress(address);
 // set billing to order
 order.setBilling(billing);
 
-Delivery delivery = new Delivery("TEKİN", "Yusuf Ziya", "TR");
+Delivery delivery = new Delivery("TAS", "Yavuz", "TR");
 delivery.setAddress(address);
-delivery.setCompany("Wmedya");
+delivery.setCompany("ACME");
 
 // set delivery to order
 order.setDelivery(delivery);
@@ -39,7 +39,7 @@ Card card = new Card("OneClickPaymentToken");
 card = new Card("OneClickPaymentToken", "123");
 
 // or directly with real card details
-card = new Card("4355084355084358", "11", "2015", "123", "Yusuf Ziya TEKİN");
+card = new Card("4355084355084358", "11", "2015", "123", "Yavuz TAS");
 
 // user with shoppers ip and shoppers browser time in UTC format
 User user = new User("127.0.0.1", "2015-05-27 13:31:52");

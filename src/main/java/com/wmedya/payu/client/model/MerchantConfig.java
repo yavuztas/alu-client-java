@@ -11,7 +11,7 @@ import java.io.Serializable;
  * MerchantConfig config = new MerchantConfig(&quot;YOUR_MERCHANT_CODE&quot;, &quot;YOUR_SECRET_KEY&quot;, MerchantPlatform.TR);
  * </pre>
  * 
- * @author Yusuf Ziya Tekin
+ * @author Yavuz Tas
  *
  */
 public class MerchantConfig implements Serializable {
@@ -25,12 +25,9 @@ public class MerchantConfig implements Serializable {
 	/**
 	 * Creates a configuration for a merchant account.
 	 * 
-	 * @param code
-	 *            Your PayU Merchant Code
-	 * @param secret
-	 *            Your PayU Secret Key
-	 * @param platform
-	 *            see {@link MerchantPlatform}
+	 * @param code     Your PayU Merchant Code
+	 * @param secret   Your PayU Secret Key
+	 * @param platform see {@link MerchantPlatform}
 	 */
 	public MerchantConfig(String code, String secret, MerchantPlatform platform) {
 		this.code = code;

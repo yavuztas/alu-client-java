@@ -10,7 +10,7 @@ package com.wmedya.payu.client.model;
  * <b>UA</b> - https://secure.payu.ua/order/alu/v3<br>
  * <b>HU</b> - https://secure.payu.hu/order/alu/v3
  * 
- * @author Yusuf Ziya Tekin
+ * @author Yavuz Tas
  *
  */
 public enum MerchantPlatform {

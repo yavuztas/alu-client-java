@@ -34,8 +34,8 @@ public class TokenPaymentTest {
 	}
 
 	/**
-	 * This will be the first payment as same as basic payment with only
-	 * difference is enabling token
+	 * This will be the first payment as same as basic payment with only difference
+	 * is enabling token
 	 */
 	@Test
 	public void paymentWithTokenRequestTest() {
@@ -51,8 +51,8 @@ public class TokenPaymentTest {
 		// adding products to order
 		order.addProduct(product1);
 
-		Billing billing = new Billing("TEKİN", "Yusuf Ziya", "TR");
-		billing.setEmail("yusufziyatekin@gmail.com");
+		Billing billing = new Billing("TAS", "Yavuz", "TR");
+		billing.setEmail("email@mymail.com");
 		billing.setPhone("123123123");
 
 		Address address = new Address("Somewhere in Turkey line 1", "Somewhere in Turkey line 2", "06100", "ANKARA", "ANKARA");
@@ -61,15 +61,15 @@ public class TokenPaymentTest {
 		// set billing to order
 		order.setBilling(billing);
 
-		Delivery delivery = new Delivery("TEKİN", "Yusuf Ziya", "TR");
+		Delivery delivery = new Delivery("TAS", "Yavuz", "TR");
 		delivery.setAddress(address);
-		delivery.setCompany("Wmedya");
+		delivery.setCompany("ACME");
 
 		// set delivery to order
 		order.setDelivery(delivery);
 
 		// or directly with real card details
-		Card card = new Card("4355084355084358", "11", "2015", "123", "Yusuf Ziya TEKİN");
+		Card card = new Card("4355084355084358", "11", "2015", "123", "Yavuz Tas");
 
 		// user with shoppers ip and shoppers browser time in UTC format
 		User user = new User("127.0.0.1", "2015-05-27 13:31:52");
@@ -93,8 +93,8 @@ public class TokenPaymentTest {
 	}
 
 	/**
-	 * This is actual token payment after you acquire and store token from
-	 * client's first payment
+	 * This is actual token payment after you acquire and store token from client's
+	 * first payment
 	 */
 	@Test
 	public void paymentWithTokenTest() {
