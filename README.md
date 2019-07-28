@@ -60,4 +60,4 @@ System.out.println("Response code: " + response.getReturnCode());
 System.out.println("Response message: " + response.getReturnMessage());
 System.out.println("Is 3D Secure ?: " + response.is3DSecure());
 ```
-See also wiki for token payment and receiving ipn requests samples
+See also the wiki page for token payment and examples of receiving IPN requests
